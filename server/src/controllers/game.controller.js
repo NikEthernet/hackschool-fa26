@@ -1,20 +1,53 @@
 const Game = require("../models/gameModel");
 
-const getGames = async () => {
+const getGames = async (req, res) => {
     const games = Game.find().sort({ createdAt: -1 });
-    return games;
+    if (games.length === 0)
+        return res.status(404).json({ error: "Games not found." });
+    res.json(games);
 };
 
-const getGameToday = async () => {
+const getGameToday = async (req, res) => {
     const game = Game.find().
         sort({ createdAt: -1 }).
         limit(1);
-    return game;
+    if (!game)
+        return res.status(404).json({ error: "Game not found." });
+    res.json(game);
 };
 
-const getSpecificGame = async (date) => {
-    const game = Game.findOne({ date });
-    return game;
+const getSpecificGame = async (req, res) => {
+    const game = Game.findOne({ date: req.params.date });
+    if (!game)
+        return res.status(404).json({ error: "Game not found." });
+    res.json(game);
 };
 
-module.exports = { getGames, getGameToday, getSpecificGame };
+const createGame = async (req, res) => {
+    const {
+        word,
+        gameMetric
+    } = req.body;
+
+    if (!word || !game_metric)
+        return res.status(400).json({ error: "Invalid Request." });
+
+    const game = new Game({
+        word: word,
+        game_metric: gameMetric
+    });
+
+    try {
+        await game.save();
+        res.status(201).json(game);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+module.exports = { 
+    getGames, 
+    getGameToday, 
+    getSpecificGame,
+    createGame 
+};
