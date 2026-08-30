@@ -8,7 +8,7 @@ async function connectToDatabase() {
     throw new Error("MONGODB_URI is not defined in environment variables");
   }
 
-  await mongoose.connect(process.env.MONGODB_URI, { dbName: "my-project" })
+  await mongoose.connect(process.env.MONGODB_URI, { dbName: "wordle-clone" })
   console.log("Connected to MongoDB");
 
   await User.createCollection(); //cinit user collection creation 
