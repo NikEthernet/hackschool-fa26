@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PastGameSchema = require("./pageGameModel");
+const PastGameSchema = require("./pastGameModel");
 
 const userSchema = new mongoose.Schema(
     {
