@@ -1,9 +1,20 @@
-
 const User = require("../models/userModel");
 
 const getUsers = async () => {
-    const poll = await User.find();
-    return poll;
+    const user = await User.find();
+    return user;
 };
 
-module.exports = { getUsers }; 
+const getUserByName = async (username) => {
+    const user = await User.findOne({ username });
+    return user;
+};
+
+const getRecentUsers = async () => {
+    const user = await User.find().
+        sort({ createdAt: -1 }).
+        limit(10);
+    return user;
+};
+
+module.exports = { getUsers, getUserByName, getRecentUsers }; 
