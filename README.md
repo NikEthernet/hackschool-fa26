@@ -14,10 +14,13 @@ Create in project root:
 `npx create-next-app@latest client`
 
 Run inside client directory:
-`num run dev`
+`npm run dev`
 
 The project runs on localhost:3000.
 
 This auto-installs TypeScript, ESLint, Tailwind CSS, App Router, and Next.js scaffolding.
 
 ## Backend (Server) Setup
+
+Run inside server directory: 
+`npm start`
