@@ -15,7 +15,8 @@ const gameSchema = mongoose.Schema(
             type: Date, 
             default: Date.now
         }
-    }
+    }, 
+    {_id: true}
 );
 
 const Game = mongoose.model("Game", gameSchema, "games");
