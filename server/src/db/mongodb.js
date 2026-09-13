@@ -11,7 +11,7 @@ async function connectToDatabase() {
   await mongoose.connect(process.env.MONGODB_URI, { dbName: "wordle-clone" })
   console.log("Connected to MongoDB");
 
-  await User.createCollection(); //cinit user collection creation 
+  await User.createCollection();
 
   return mongoose.connection;
 }
