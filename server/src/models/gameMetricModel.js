@@ -17,6 +17,4 @@ const gameMetricSchema = mongoose.Schema(
     }
 );
 
-const GameMetric = mongoose.model("GameMetric", gameMetricSchema, "game_metrics");
-
-module.exports = GameMetric; 
+module.exports = gameMetricSchema; 

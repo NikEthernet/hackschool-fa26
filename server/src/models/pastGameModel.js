@@ -12,6 +12,4 @@ const pastGameSchema = new mongoose.Schema(
     {_id: true}
 );
 
-const PastGame = mongoose.model("PastGame", pastGameSchema, "past_games");
-
-module.exports = PastGame; 
+module.exports = pastGameSchema; 
