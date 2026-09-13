@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { getUsers, getUserByName, createUser } = require("./user.controller");
+const { getUsers, getUserByName, getRecentUsers, createUser } = require("./user.controller");
 
 function mockRes() {
     return {
@@ -24,8 +24,13 @@ function mockRes() {
     // await getUsers({}, mockRes());
 
     //Uncomment these two lines of code to test your getUserByName function!
-    // console.log(`Running getUserByName(${username})`);
+    // console.log("Running getUserByName() with input of nik...");
     // await getUserByName({ params: { username: "nik" } }, mockRes());
+    // If you want to search for any other users, just replace the username "nik" above
+
+    //Uncomment these two lines of code to test your getRecentUsers function!
+    // console.log("Running getRecentUsers()...");
+    // await getRecentUsers({}, mockRes());
 
     //Uncomment these seven lines of code to test your createUser function!
     // console.log("Running createUser()");
