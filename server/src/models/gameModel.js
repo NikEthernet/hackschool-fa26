@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const GameMetric = require("./gameMetricModel");
+const GameMetric = require("./gameMetricSchema");
 
 const gameSchema = mongoose.Schema(
     {
