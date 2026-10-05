@@ -33,9 +33,9 @@ export default function OtherProfiles({
       setLoading(true);
       setError(null);
       try {
+        //start of getUsers fetch
         const res = await fetch(`${API}/api/users`);
 
-        // getUsers controller returns 404 when there are no users
         if (res.status === 404) {
           if (!cancelled) setProfiles([]);
           return;
@@ -44,10 +44,10 @@ export default function OtherProfiles({
 
         const data: PublicProfile[] = await res.json();
 
-        // Remove the current user from the list
         if (!cancelled) {
           setProfiles(data.filter((u) => u.username !== excludeUsername));
         }
+        //end of getUsers fetch
 
         // Uncomment this block to test your getRecentUsers() function!
         // (Comment out the getUsers fetch above first, so only one fetch runs.)
