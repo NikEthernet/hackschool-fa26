@@ -4,10 +4,13 @@ import confetti from "canvas-confetti";
 import Toast from "./Toast";
 import Board from "./Board/Board";
 import Keyboard from "./Keyboard/Keyboard";
-import Link from "next/link";
 import type { LetterStatus, RowData } from "@/lib/types";
 import { getWordOfTheDay } from "@/lib/wordOfTheDay";
 import { getTodayFormatted } from "@/lib/date";
+import { getUsername } from "@/lib/session";
+import { testUser, saveTestGame } from "@/lib/testUser";
+
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 const ROWS = 6;
 const COLS = 5;
@@ -91,6 +94,29 @@ export default function Game() {
     return () => { window.removeEventListener("keydown", handlePhysicalKey); };
   }, [gameOver]);
 
+  // Saves a finished game to the signed-in user's past_games in the database
+  const saveGame = async (guessedWords: string[]): Promise<void> => {
+    const username = getUsername();
+    if (!username) return;
+
+    //If testing locally 
+    if (username === testUser.username) {
+      saveTestGame(solution, guessedWords);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/api/users/${encodeURIComponent(username)}/games`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ word: solution, guessed_words: guessedWords }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    } catch (e) {
+      console.error("Could not save game:", e);
+      setToast("Couldn't save your game");
+    }
+  };
 
   // Function to submit the current row and update game state
   const submitRow = (): void => {
@@ -131,11 +157,17 @@ export default function Game() {
     newRows[currentRow] = newRow;
     setRows(newRows);
 
+    const guessedWords = [
+      ...rows.slice(0, currentRow).map((r) => r.map((t) => t.letter).join("")),
+      guess.join(""),
+    ];
+
     // Win condition
     if (guess.join("") === solution) {
       setGameOver(true);
       setToast("Correct!");
       confetti({ particleCount: 120, spread: 70, origin: { y: 0.3 } });
+      saveGame(guessedWords);
       return;
     }
 
@@ -143,6 +175,7 @@ export default function Game() {
     if (currentRow === ROWS - 1) {
       setGameOver(true);
       setToast(`Game over. Word was ${solution}`);
+      saveGame(guessedWords);
       return;
     }
 

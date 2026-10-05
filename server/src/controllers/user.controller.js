@@ -60,10 +60,37 @@ const createUser = async (req, res) => {
     }
 };
 
+const addPastGame = async (req, res) => {
+    try {
+        const { word, guessed_words } = req.body;
+
+        if (!word || !Array.isArray(guessed_words) || guessed_words.length === 0)
+            return res.status(400).json({ error: "word and guessed_words are required." });
+
+        const user = await User.findOne({ username: req.params.username });
+        if (!user) return res.status(404).json({ error: "User not found." });
+
+        // A win means the last guess was the word. The server works this out
+        // itself instead of trusting a "won" flag from the browser.
+        const won =
+            guessed_words[guessed_words.length - 1].toUpperCase() === word.toUpperCase();
+
+        user.past_games.push({ word, guessed_words, date: new Date() });
+        user.streak = won ? user.streak + 1 : 0;
+
+        await user.save();
+
+        res.status(201).json({ game: user.past_games.at(-1), streak: user.streak });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 module.exports = {
     login,
     getUsers,
     getUserByName,
     getRecentUsers,
-    createUser
+    createUser,
+    addPastGame
 }; 

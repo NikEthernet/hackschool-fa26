@@ -6,7 +6,7 @@ import UserDetails from "@/components/Profile/UserDetails";
 import OtherProfiles from "@/components/Profile/OtherProfiles";
 import GameHistory from "@/components/Profile/GameHistory";
 import { clearSession, getUsername } from "@/lib/session";
-import { testUser, testOthers } from "@/lib/testUser";
+import { testUser, testOthers, getTestUser } from "@/lib/testUser";
 import type { UserProfile } from "@/lib/types";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -21,7 +21,7 @@ export default function ProfilePage() {
     if (!username) return; // the navbar sends signed-out visitors to /login
 
     if (username === testUser.username) {
-      setUser(testUser);
+      setUser(getTestUser());
       return;
     }
 
