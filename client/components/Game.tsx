@@ -89,7 +89,7 @@ export default function Game() {
     };
     window.addEventListener("keydown", handlePhysicalKey);
     return () => { window.removeEventListener("keydown", handlePhysicalKey); };
-  }, [gameOver]);
+  }, [gameOver, handleKey]);
 
 
   // Function to submit the current row and update game state
