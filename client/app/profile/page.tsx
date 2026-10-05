@@ -6,6 +6,7 @@ import UserDetails from "@/components/Profile/UserDetails";
 import OtherProfiles from "@/components/Profile/OtherProfiles";
 import GameHistory from "@/components/Profile/GameHistory";
 import { clearSession, getUsername } from "@/lib/session";
+import { testUser, testOthers } from "@/lib/testUser";
 import type { UserProfile } from "@/lib/types";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -18,6 +19,11 @@ export default function ProfilePage() {
   useEffect(() => {
     const username = getUsername();
     if (!username) return; // the navbar sends signed-out visitors to /login
+
+    if (username === testUser.username) {
+      setUser(testUser);
+      return;
+    }
 
     let cancelled = false;
 
@@ -52,7 +58,10 @@ export default function ProfilePage() {
         <div className="mx-auto w-full max-w-6xl flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-1 gap-6">
           <div className="lg:col-span-1 flex flex-col gap-6 min-h-0">
             <UserDetails user={user} />
-            <OtherProfiles excludeUsername={user.username} />
+            <OtherProfiles 
+            excludeUsername={user.username} 
+            localProfiles={user.username === testUser.username ? testOthers : undefined}
+            />
           </div>
 
           <div className="lg:col-span-2 min-h-0">

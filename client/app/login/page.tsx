@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setSession } from "@/lib/session";
+import { testUser, TEST_PASSWORD } from "@/lib/testUser";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -22,6 +23,11 @@ export default function LoginPage() {
     setSubmitting(true);
 
     try {
+      if (mode === "login" && username === testUser.username && password === TEST_PASSWORD) {
+        setSession(testUser.username);
+        router.push("/");
+        return;
+      }
       // Login and sign up hit different routes and send different fields
       const url = mode === "login" ? `${API}/api/users/login` : `${API}/api/users`;
       const body =
@@ -49,15 +55,15 @@ export default function LoginPage() {
   return (
     <div className="flex flex-1 items-center justify-center bg-slate-900 px-6 text-slate-100">
       <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-lg bg-slate-800 p-6 flex flex-col gap-4">
-        
+
         <h1 className="text-2xl font-bold">
           {mode === "login" ? "Sign in" : "Create account"}
         </h1>
 
         {mode === "login" && (
           <h2 className="text-l font-semibold text-left opacity-70">
-            Go ahead and use "Nick" for the username and 
-            "mock-password-123" for the password 
+            Go ahead and use "TheWordler" for the username and
+            "mock-password-123" for the password
             for a test account
           </h2>
         )}

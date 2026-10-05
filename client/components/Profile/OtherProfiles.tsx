@@ -6,7 +6,13 @@ import type { PublicProfile } from "@/lib/types";
 // Fetch all user endpoints from the API
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-export default function OtherProfiles({ excludeUsername }: { excludeUsername?: string }) {
+export default function OtherProfiles({
+  excludeUsername,
+  localProfiles,
+}: {
+  excludeUsername?: string;
+  localProfiles?: PublicProfile[];
+}) {
   const [profiles, setProfiles] = useState<PublicProfile[]>([]); // every profile we fetched
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,15 +20,22 @@ export default function OtherProfiles({ excludeUsername }: { excludeUsername?: s
 
   // Fetch all profiles once when the component loads
   useEffect(() => {
+    if (localProfiles) {
+      setProfiles(localProfiles.filter((u) => u.username !== excludeUsername));
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false; // stops us from updating state if the component unmounts mid-fetch
 
     (async () => {
       setLoading(true);
       setError(null);
       try {
+        //start of getUsers fetch
         const res = await fetch(`${API}/api/users`);
 
-        // getUsers controller returns 404 when there are no users
         if (res.status === 404) {
           if (!cancelled) setProfiles([]);
           return;
@@ -31,10 +44,10 @@ export default function OtherProfiles({ excludeUsername }: { excludeUsername?: s
 
         const data: PublicProfile[] = await res.json();
 
-        // Remove the current user from the list
         if (!cancelled) {
           setProfiles(data.filter((u) => u.username !== excludeUsername));
         }
+        //end of getUsers fetch
 
         // Uncomment this block to test your getRecentUsers() function!
         // (Comment out the getUsers fetch above first, so only one fetch runs.)
@@ -59,7 +72,7 @@ export default function OtherProfiles({ excludeUsername }: { excludeUsername?: s
     })();
 
     return () => { cancelled = true; };
-  }, [excludeUsername, attempt]);
+  }, [excludeUsername, attempt, localProfiles]);
 
   return (
     <section className="flex min-h-0 flex-1 flex-col rounded-lg bg-slate-800 p-6">
