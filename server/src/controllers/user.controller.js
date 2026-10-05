@@ -1,23 +1,5 @@
 const User = require("../models/userModel");
 
-const login = async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        if (!username || !password)
-            return res.status(400).json({ error: "Username and password are required." });
-
-        const user = await User.findOne({ username });
-        if (!user || user.password !== password)
-            return res.status(401).json({ error: "Invalid username or password." });
-
-        // Remove the password before sending the user back
-        const { password: _removed, ...safeUser } = user.toObject();
-        res.json(safeUser);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
 const getUsers = async (req, res) => {
     const users = await User.find();
     if (users.length === 0)
@@ -57,6 +39,24 @@ const createUser = async (req, res) => {
         if (err.code === 11000)
             return res.status(409).json({ error: "That email is already in use." });
         res.status(400).json({ error: err.message });
+    }
+};
+
+const login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password)
+            return res.status(400).json({ error: "Username and password are required." });
+
+        const user = await User.findOne({ username });
+        if (!user || user.password !== password)
+            return res.status(401).json({ error: "Invalid username or password." });
+
+        // Remove the password before sending the user back
+        const { password: _removed, ...safeUser } = user.toObject();
+        res.json(safeUser);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
 
