@@ -118,7 +118,7 @@ export default function OtherProfiles({
           {/* List of other players based on API endpoint use */}
           {profiles.map((p) => (
             <li key={p._id} className="flex shrink-0 items-center gap-3 rounded bg-slate-700 p-3">
-              <img src="/profile.png" width={36} alt="Profile" className="rounded-full" />
+              <img src="/Profile.png" width={36} alt="Profile" className="rounded-full" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold">{p.username}</p>
                 {p.bio && <p className="truncate text-xs opacity-60">{p.bio}</p>}

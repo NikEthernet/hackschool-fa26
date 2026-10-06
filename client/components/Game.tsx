@@ -92,7 +92,7 @@ export default function Game() {
     };
     window.addEventListener("keydown", handlePhysicalKey);
     return () => { window.removeEventListener("keydown", handlePhysicalKey); };
-  });
+  }, [gameOver, handleKey]);
 
   // Saves a finished game to the signed-in user's past_games in the database
   const saveGame = async (guessedWords: string[]): Promise<void> => {
